@@ -1,0 +1,35 @@
+https://github.com/wardviaene/on-prem-or-cloud-agnostic-kubernetes/
+
+
+https://github.com/cncf/landscape/blob/master/trail_map/CNCF_TrailMap_latest.pdf
+
+
+on master and nodes 
+
+git clone https://github.com/wardviaene/on-prem-or-cloud-agnostic-kubernetes/
+
+
+on scripts folder u will find install kubernetes on master and on node
+
+
+./install-kubernetes.sh
+
+go to node
+install-node.sh
+and install from script folder 
+
+./install-node.sh
+
+
+now copy the command from master to node to add the node to the kubernetes
+
+  kubeadm join 192.168.100.10:6443 --token gxvfd1.wo2wtz3zjydfkseh --discovery-token-ca-cert-hash sha256:fdc15b69bc8780b6a43c584c66bca4e586a6ca0df1fbab18ce5a02cb698b116d
+
+
+now reate the user from the script on the scripts folder.
+on master 
+./create-user.sh
+
+kubectl run helloworld --image=k8s.grc.io/echoserver:1.4 -- port=8080
+
+kubectl expose deployment helloworld --type=NodePort
