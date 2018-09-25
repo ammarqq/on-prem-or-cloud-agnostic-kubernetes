@@ -77,3 +77,20 @@ cat test
 s3cmd put test --no-ssl --host=${AWS_HOST} --host-bucket= s3://demobucket
 
 s3cmd ls --no-ssl --host=${AWS_HOST} --host-bucket= s3://demobucket
+
+_________________
+File System.
+kubectl create -f rook-storageclass-fs.yaml
+
+vim fs-demo.yaml
+kubectl create -f fs-demo.yaml
+kubectl get pods -n rook
+
+kubectl get pods to check ubuntu pod is up
+
+kubectl exec -it ubuntu -- bash
+mount |grep data
+we will see the ceph ips mounted 
+
+echo 'test' > /data/helloworld
+

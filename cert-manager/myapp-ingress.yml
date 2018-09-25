@@ -6,12 +6,14 @@ metadata:
   name: myapp
   namespace: default
 spec:
-  #tls:
-  #- secretName: myapp-tls-staging
-  #  hosts:
+  tls:
+  - secretName: myapp-tls-prod
+    hosts:
   #  - myapp.newtech.academy
+    -  myapp.psamman.com
   rules:
-    - host: myapp.newtech.academy
+   # - host: myapp.newtech.academy
+    - host: myapp.psamman.com
       http:
         paths:
           - backend:
