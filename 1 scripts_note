@@ -30,6 +30,6 @@ now reate the user from the script on the scripts folder.
 on master 
 ./create-user.sh
 
-kubectl run helloworld --image=k8s.grc.io/echoserver:1.4 -- port=8080
-
+kubectl run helloworld --image=k8s.gcr.io/echoserver:1.4 --port=8080
+                               
 kubectl expose deployment helloworld --type=NodePort

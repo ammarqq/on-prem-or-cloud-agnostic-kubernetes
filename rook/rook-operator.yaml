@@ -120,6 +120,7 @@ spec:
       containers:
       - name: rook-operator
         image: rook/rook:v0.7.1
+        # image: rook/rook:v0.7.1-4.g4233e03
         args: ["operator"]
         env:
         # To disable RBAC, uncomment the following:
