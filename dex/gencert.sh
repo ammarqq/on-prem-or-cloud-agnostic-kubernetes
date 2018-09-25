@@ -15,7 +15,8 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = dex.newtech.academy
+# DNS.1 = dex.newtech.academy
+  DNS.1 = dex.psamman.com
 EOF
 
 openssl genrsa -out ssl/ca-key.pem 2048

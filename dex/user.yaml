@@ -18,5 +18,5 @@ roleRef:
   name: exampleUser
 subjects:
 - kind: User
-  name: your@email.inv
+  name: ammarqqqq@gmail.com
   namespace: default
