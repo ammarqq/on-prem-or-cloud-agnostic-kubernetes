@@ -26,3 +26,7 @@ export PATH=$PATH:~/openshift-origin-client-tools-v3.9.0-191fece-linux-64bit
 echo 'export PATH=$PATH:~/openshift-origin-client-tools-v3.9.0-191fece-linux-64bit' >> .bash_profile
 oc cluster up --public-hostname=$(curl -s ifconfig.co) --host-data-dir=/data
 }}}
+
+
+username:developer
+password: can be anything

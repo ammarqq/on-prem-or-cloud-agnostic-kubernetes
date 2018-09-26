@@ -66,7 +66,7 @@ Enable zipkin:
 ```
 kubectl apply -f install/kubernetes/addons/zipkin.yaml
 ```
-
+to use jaeger u need to remove zipkin
 Enable Jaeger:
 ```
 kubectl delete -f install/kubernetes/addons/zipkin.yaml # if zipkin was installed, delete it first

@@ -27,6 +27,8 @@ now copy the command from master to node to add the node to the kubernetes
 
 
 now reate the user from the script on the scripts folder.
+https://www.slideshare.net/secret/wMKjD00UAgxPaa
+
 on master 
 ./create-user.sh
 
