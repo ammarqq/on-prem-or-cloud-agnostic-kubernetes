@@ -2,6 +2,8 @@
 
 download (0.7.1):
 ```
+on master-node download the file
+
 wget https://github.com/istio/istio/releases/download/0.7.1/istio-0.7.1-linux.tar.gz
 tar -xzvf istio-0.7.1-linux.tar.gz
 cd istio-0.7.1
@@ -17,7 +19,7 @@ cd istio-0.7.1 # change 0.7.1 in your version
 
 with no mutual TLS authentication
 ```
-kubectl apply -f install/kubernetes/istio.yaml
+kubectl apply -f install/kubernetes/istio.yaml -->use this one .. execute it twice.
 ```
 
 or with mutual TLS authentication
@@ -26,12 +28,20 @@ kubectl apply -f install/kubernetes/istio-auth.yaml
 ```
 
 Example app (from istio)
+aswedont have loadbalancer 
 ```
 kubectl edit svc istio-ingress -n istio-system # change loadbalancer to nodeport (or use hostport)
+
+kubectl get svc -n istio-system
+
 export PATH="$PATH:/home/ubuntu/istio-0.7.1/bin"
 kubectl apply -f <(istioctl kube-inject --debug -f samples/bookinfo/kube/bookinfo.yaml)
 ```
+kubectl get pods
 
+kubectl edit productpage-v1-787df8db4-6429d
+
+http://104.248.239.115:32383/productpage   master-node ip
 
 # Traffic management
 

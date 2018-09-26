@@ -105,14 +105,23 @@ kubectl get pods will be work but not nodes no authorized to check nodes.
 # Auto-renewal of token
 For autorenewal, you need to share the client secret with the end-user (not recommended)
 ```
-kubectl config set-credentials developer --auth-provider=oidc --auth-provider-arg=idp-issuer-url=https://dex.newtech.academy:32000 --auth-provider-arg=client-id=example-app --auth-provider-arg=idp-certificate-authority=/etc/kubernetes/pki/openid-ca.pem  --auth-provider-arg=id-token=${TOKEN} --auth-provider-arg=refresh-token=${REFRESH_TOKEN} --auth-provider-arg=client-secret=${CLIENT_SECRET}
+kubectl config set-credentials developer --auth-provider=oidc --auth-provider-arg=idp-issuer-url=https://dex.psamman.com:32000 --auth-provider-arg=client-id=example-app --auth-provider-arg=idp-certificate-authority=/etc/kubernetes/pki/openid-ca.pem  --auth-provider-arg=id-token=${TOKEN} --auth-provider-arg=refresh-token=${REFRESH_TOKEN} --auth-provider-arg=client-secret=${CLIENT_SECRET}
 ```
 
 # LDAP config
 
 ```
+we need to install ldap for testing purpose if we have ldap there is no need to install it
+
 sudo apt-get -y install slapd ldap-utils gnutls-bin ssl-cert
-sudo dpkg-reconfigure slapd
+sudo dpkg-reconfigure slapd  (re-configure)
+
+name it example.com fake domain
+remove old ldap
+not allow another ldap protocols.
+now dex wanna to use encryption 
+create certificates for the ldap
+
 ./gencert-ldap.sh
 sudo ldapmodify -H ldapi:// -Y EXTERNAL -f ldap/certinfo.ldif
 ldapadd -x -D cn=admin,dc=example,dc=com -W -f ldap/users.ldif 
@@ -127,13 +136,50 @@ and run:
 ```
 sudo systemctl restart slapd.service
 ```
+add on master-node /etc/hosts
+127.0.0.1 localhost ldap01.example.com
+
+testing ldap
+
+ldapsearch -x -D 'uid=serviceaccount,ou=people,dc=example,dc=com' -w 'serviceaccountldap'-H ldap://ldap01.example.com -ZZ -b dc=example,dc=com 'uid=john' cn ginNumber 
 
 create LDAP CA secret and change configmap
 ```
 cat /etc/ssl/certs/cacert.pem
+copy the certificate 
 kubectl edit configmap ldap-tls -n dex
+and hcange the empty to the certificate copiedbefore.
+now on dex.yaml  search on ldap-tls
+checkthe configmap-ldap.yaml
+
+
 kubectl apply -f configmap-ldap.yaml
+
+to make it works restart pods on dex as below:
+
+kubectl delete pods -n dex --all
+kubectl get pods -n dex
+
+
 kubectl edit deploy dex -n dex  # edit the ldap IP alias
 ```
 
+./bin/example-app --issuer https://dex.psamman.com:32000 --issuer-root-ca /etc/kubernetes/pki/openid-ca.pem --listen http://${MY_IP}:5555 --redirect-uri http://${MY_IP}:5555/callback
+
+andopen the link to check it
+
+we got error lets debug it
+kubectl get pods -n dex
+kubectl  logs dex-5f7b946b9c-9bbhh 0n dex
+
+the pod cant use localhost
+kubectl edit deploy dex -n dex
+we have host hostAliases:
+hostAliases:
+      - hostnames:
+        - ldap01.example.com
+        ip: 127.1.2.3 ---> change it to master-node ip
+
+
+kubectl get pods -n dex
 
