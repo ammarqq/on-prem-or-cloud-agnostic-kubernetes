@@ -6,11 +6,11 @@ metadata:
   name: myapp
   namespace: default
 spec:
-  tls:
-  - secretName: myapp-tls-prod
-    hosts:
-  #  - myapp.newtech.academy
-    -  myapp.psamman.com
+  # tls:
+  # - secretName: myapp-tls-prod
+  #   hosts:
+  # #  - myapp.newtech.academy
+  #   -  myapp.psamman.com
   rules:
    # - host: myapp.newtech.academy
     - host: myapp.psamman.com

@@ -1,0 +1,126 @@
+###########################################################################
+# NameSpace
+###########################################################################
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tomcat
+---
+# ##
+# # issuer prod
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: tomcat-letsncrypt-prod
+  namespace: tomcat
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: ammarqqqq@gmail.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: tomcat-letsncrypt-prod
+    # Enable HTTP01 validations
+    http01: {}
+
+---
+# certificate-prod
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: tomcat
+  namespace: tomcat
+spec:
+  secretName: tomcat-tls-prod
+  issuerRef:
+    name: tomcat-letsncrypt-prod
+  commonName: tomcat.psamman.com
+  #dnsNames:
+  #- www.myapp.newtech.academy
+  acme:
+    config:
+    - http01:
+        # namespace: tomcat
+        ingress: tomcat
+      domains:
+        - tomcat.psamman.com
+      
+
+
+###########################################################################
+# Ingress
+###########################################################################  
+---   
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tomcat
+  namespace: tomcat
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    name: tomcat
+    namespace: tomcat
+    # letsencrypt support enabled (https://github.com/jetstack/kube-lego)
+    #kubernetes.io/tls-acme: "true"
+    # use the Kubernetes ingress "nginx"
+    #kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: tomcat-tls-prod
+    hosts:
+    -  tomcat.psamman.com
+  rules:
+  - host: tomcat.psamman.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tomcat-svc
+          servicePort: 8080   
+###########################################################################
+# Services
+###########################################################################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: tomcat
+  name: tomcat-svc
+  labels:
+    service: tomcat-svc-label
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app-server: tomcat
+###########################################################################
+# Deployment
+###########################################################################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: tomcat
+  name: tomcat8-deployment
+  labels:
+    app: tomcat8
+spec:
+  selector:
+    matchLabels:
+      app-server: tomcat
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app-server: tomcat
+    spec:
+      containers:
+      - name: tomcat-container
+        image: tomcat:8
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always

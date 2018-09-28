@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tomcat
+  namespace: tomcat
+  annotations:
+    # kubernetes.io/ingress.class: nginx
+    # name: tomcat
+    # namespace: tomcat
+    # letsencrypt support enabled (https://github.com/jetstack/kube-lego)
+    #kubernetes.io/tls-acme: "true"
+    # use the Kubernetes ingress "nginx"
+    #kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: tomcat-tls-prod
+    hosts:
+  #  - myapp.newtech.academy
+    -  tomcat.psamman.com
+  rules:
+  - host: tomcat.psamman.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tomcat-svc
+          servicePort: 8080  
